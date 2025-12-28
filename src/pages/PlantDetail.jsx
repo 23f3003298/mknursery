@@ -3,12 +3,14 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Check, AlertTriangle } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
+import { useSettings } from '../hooks/useSettings'
 import './PlantDetail.css'
 
 export default function PlantDetail() {
     const { id } = useParams()
     const [plant, setPlant] = useState(null)
     const [loading, setLoading] = useState(true)
+    const { settings } = useSettings()
 
     useEffect(() => {
         fetchPlant()
@@ -65,9 +67,8 @@ export default function PlantDetail() {
                     <div className="pd-contact">
                         <h3>Interested?</h3>
                         <p>Visit our nursery to purchase this plant. We are located at:</p>
-                        <address>
-                            123 Green Street<br />
-                            Plant City, PC 12345
+                        <address style={{ whiteSpace: 'pre-line' }}>
+                            {settings.address}
                         </address>
                     </div>
                 </div>

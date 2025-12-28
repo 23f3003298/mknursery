@@ -1,16 +1,19 @@
 
 import { Outlet, NavLink } from 'react-router-dom'
 import { Leaf } from 'lucide-react'
+import { useSettings } from '../hooks/useSettings'
 import './MainLayout.css'
 
 export default function MainLayout() {
+    const { settings } = useSettings()
+
     return (
         <div className="main-layout">
             <header className="main-header">
                 <div className="container header-content">
                     <NavLink to="/" className="logo">
                         <Leaf className="logo-icon" />
-                        <span>MK Nursery</span>
+                        <span>{settings.site_name}</span>
                     </NavLink>
 
                     <nav className="main-nav">
@@ -29,7 +32,7 @@ export default function MainLayout() {
             <footer className="main-footer">
                 <div className="container footer-grid">
                     <div className="footer-col">
-                        <h3>MK Nursery</h3>
+                        <h3>{settings.site_name}</h3>
                         <p>Bringing nature indoors with our curated collection of healthy, beautiful plants.</p>
                     </div>
 
@@ -46,18 +49,17 @@ export default function MainLayout() {
 
                     <div className="footer-col">
                         <h3>Contact Us</h3>
-                        <p>123 Green Street, Plant City, PC</p>
-                        <p>(555) 123-4567</p>
-                        <p>hello@mknursery.com</p>
+                        <p>{settings.address}</p>
+                        <p>{settings.phone}</p>
+                        <p>{settings.email}</p>
                     </div>
                 </div>
                 <div className="footer-bottom">
                     <div className="container">
-                        <p>&copy; {new Date().getFullYear()} MK Nursery. All rights reserved.</p>
+                        <p>&copy; {new Date().getFullYear()} {settings.site_name}. All rights reserved.</p>
                     </div>
                 </div>
             </footer>
         </div>
     )
 }
-

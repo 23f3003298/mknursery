@@ -1,9 +1,11 @@
 
 import { useState } from 'react'
 import { MapPin, Phone, Mail, Send } from 'lucide-react'
+import { useSettings } from '../hooks/useSettings'
 import './Contact.css'
 
 export default function Contact() {
+    const { settings, loading: settingsLoading } = useSettings()
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -24,6 +26,8 @@ export default function Contact() {
         setFormData({ name: '', email: '', message: '' })
     }
 
+    if (settingsLoading) return <div className="container" style={{ padding: '4rem' }}>Loading...</div>
+
     return (
         <div className="contact-page">
             <div className="contact-header">
@@ -43,7 +47,7 @@ export default function Contact() {
                             <MapPin className="info-icon" />
                             <div>
                                 <h3>Visit Us</h3>
-                                <p>123 Green Street<br />Plant City, PC 12345</p>
+                                <p style={{ whiteSpace: 'pre-line' }}>{settings.address}</p>
                             </div>
                         </div>
 
@@ -51,7 +55,7 @@ export default function Contact() {
                             <Phone className="info-icon" />
                             <div>
                                 <h3>Call Us</h3>
-                                <p>(555) 123-4567</p>
+                                <p>{settings.phone}</p>
                             </div>
                         </div>
 
@@ -59,16 +63,16 @@ export default function Contact() {
                             <Mail className="info-icon" />
                             <div>
                                 <h3>Email Us</h3>
-                                <p>hello@mknursery.com</p>
+                                <p>{settings.email}</p>
                             </div>
                         </div>
 
                         <div className="business-hours">
                             <h3>Business Hours</h3>
                             <ul>
-                                <li><span>Mon - Fri:</span> 9:00 AM - 6:00 PM</li>
-                                <li><span>Saturday:</span> 8:00 AM - 5:00 PM</li>
-                                <li><span>Sunday:</span> 10:00 AM - 4:00 PM</li>
+                                <li><span>Mon - Fri:</span> {settings.business_hours?.monday_friday}</li>
+                                <li><span>Saturday:</span> {settings.business_hours?.saturday}</li>
+                                <li><span>Sunday:</span> {settings.business_hours?.sunday}</li>
                             </ul>
                         </div>
                     </div>

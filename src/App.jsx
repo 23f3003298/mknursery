@@ -6,6 +6,7 @@ import MainLayout from './layouts/MainLayout'
 import Dashboard from './pages/admin/Dashboard'
 import Plants from './pages/admin/Plants'
 import Blogs from './pages/admin/Blogs'
+import Settings from './pages/admin/Settings'
 import Home from './pages/Home'
 import Catalog from './pages/Catalog'
 import BlogList from './pages/BlogList'
@@ -38,6 +39,7 @@ function App() {
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="plants" element={<Plants />} />
               <Route path="blogs" element={<Blogs />} />
+              <Route path="settings" element={<Settings />} />
             </Route>
           </Route>
 
