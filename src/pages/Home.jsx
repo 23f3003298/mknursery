@@ -78,7 +78,7 @@ export default function Home() {
                         <p>Discover our curated collection of beautiful, healthy plants to transform your space into a green sanctuary.</p>
                         <div className="hero-cta-group">
                             <Link to="/catalog" className="cta-btn primary">
-                                Browse Catalog <ArrowRight size={20} />
+                                Plant Gallery <ArrowRight size={20} />
                             </Link>
                             <Link to="/blogs" className="cta-btn secondary">
                                 Plant Care Guide
