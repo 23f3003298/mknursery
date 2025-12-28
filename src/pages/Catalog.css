@@ -1,15 +1,15 @@
 .catalog-page {
-    padding: 3rem 1.5rem;
+    padding: 4rem 2rem;
+    min-height: 70vh;
 }
 
 .catalog-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
 }
 
 .catalog-header h1 {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
 }
 
 .catalog-header p {
@@ -19,71 +19,110 @@
 
 .catalog-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 2.5rem;
 }
 
 .catalog-card {
     background: white;
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
     color: inherit;
     display: block;
 }
 
 .catalog-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
 }
 
 .catalog-image {
-    height: 250px;
+    height: 320px;
     position: relative;
     background-color: #f8f9fa;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 .catalog-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.catalog-card:hover .catalog-image img {
+    transform: scale(1.08);
+}
+
+.card-tags {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    z-index: 2;
+}
+
+.tag {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tag.limited {
+    background: rgba(255, 193, 7, 0.95);
+    color: #7d5d00;
 }
 
 .stock-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: rgba(0, 0, 0, 0.7);
+    top: 1rem;
+    right: 1rem;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
     color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 50px;
-    font-size: 0.8rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
     font-weight: 600;
+    z-index: 2;
 }
 
 .stock-badge.out {
     background-color: var(--color-error);
 }
 
+.no-image-placeholder {
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
 .catalog-info {
-    padding: 1.5rem;
+    padding: 1.75rem;
 }
 
 .catalog-info h3 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.25rem;
+    margin: 0 0 0.75rem 0;
+    font-size: 1.5rem;
     color: var(--color-primary);
 }
 
 .description {
-    color: var(--color-text-muted);
+    color: #666;
     font-size: 0.95rem;
-    line-height: 1.5;
+    line-height: 1.7;
     margin-bottom: 1.5rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -92,29 +131,50 @@
     overflow: hidden;
 }
 
-.catalog-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid var(--color-border);
-    padding-top: 1rem;
+.view-details-btn {
+    width: 100%;
+    padding: 0.85rem;
+    background: var(--color-accent);
+    color: var(--color-primary);
+    border: 2px solid var(--color-accent);
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+    cursor: pointer;
 }
 
-.price {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--color-text);
+.view-details-btn:hover {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
 }
 
-.stock-status {
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.stock-status.available {
-    color: var(--color-secondary);
-}
-
-.stock-status.unavailable {
+.loading,
+.empty-catalog {
+    text-align: center;
+    padding: 4rem 2rem;
     color: var(--color-text-muted);
+    font-size: 1.1rem;
+}
+
+.empty-catalog {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 768px) {
+    .catalog-page {
+        padding: 3rem 1.25rem;
+    }
+
+    .catalog-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .catalog-header {
+        margin-bottom: 3rem;
+    }
 }

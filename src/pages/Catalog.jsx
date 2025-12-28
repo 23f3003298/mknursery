@@ -23,11 +23,23 @@ export default function Catalog() {
         setLoading(false)
     }
 
+    // Simple category assignment based on plant name
+    const getCategory = (name) => {
+        const lowerName = name.toLowerCase()
+        if (lowerName.includes('succulent') || lowerName.includes('aloe') || lowerName.includes('cactus')) {
+            return 'Low Maintenance'
+        }
+        if (lowerName.includes('fern') || lowerName.includes('orchid')) {
+            return 'Moderate Care'
+        }
+        return 'Indoor'
+    }
+
     return (
         <div className="catalog-page container">
             <div className="catalog-header">
                 <h1>Our Collection</h1>
-                <p>Browse our selection of locally grown plants.</p>
+                <p>Browse our selection of locally grown, healthy plants</p>
             </div>
 
             {loading ? (
@@ -46,6 +58,12 @@ export default function Catalog() {
                                 ) : (
                                     <div className="no-image-placeholder">No Image</div>
                                 )}
+                                <div className="card-tags">
+                                    <span className="tag">{getCategory(plant.name)}</span>
+                                    {plant.stock > 0 && plant.stock <= 5 && (
+                                        <span className="tag limited">Limited Stock</span>
+                                    )}
+                                </div>
                                 {plant.stock <= 0 && (
                                     <div className="stock-badge out">Out of Stock</div>
                                 )}
@@ -53,12 +71,7 @@ export default function Catalog() {
                             <div className="catalog-info">
                                 <h3>{plant.name}</h3>
                                 <p className="description">{plant.description}</p>
-                                <div className="catalog-footer">
-                                    <span className="price">{plant.price ? `₹${plant.price}` : 'Contact for Price'}</span>
-                                    <span className={`stock-status ${plant.stock > 0 ? 'available' : 'unavailable'}`}>
-                                        {plant.stock > 0 ? `${plant.stock} Available` : 'Sold Out'}
-                                    </span>
-                                </div>
+                                <button className="view-details-btn">View Details</button>
                             </div>
                         </Link>
                     ))}

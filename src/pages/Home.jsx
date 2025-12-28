@@ -1,7 +1,6 @@
-
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Leaf, Award, MapPin, Shield, Star } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 import './Home.css'
 
@@ -14,7 +13,6 @@ export default function Home() {
     }, [])
 
     const fetchFeatured = async () => {
-        // Fetch latest 3 plants
         const { data, error } = await supabase
             .from('plants')
             .select('*')
@@ -27,42 +25,98 @@ export default function Home() {
         setLoading(false)
     }
 
+    const careLevels = [
+        {
+            emoji: '🌱',
+            title: 'Beginner Friendly',
+            description: 'Perfect for those just starting their plant journey. Low maintenance and forgiving.',
+            color: '#95d5b2'
+        },
+        {
+            emoji: '🌿',
+            title: 'Moderate Care',
+            description: 'For plant enthusiasts ready to level up. Regular attention brings beautiful rewards.',
+            color: '#52b788'
+        },
+        {
+            emoji: '🌳',
+            title: 'Expert Care',
+            description: 'For dedicated plant parents. These beauties require knowledge and commitment.',
+            color: '#2d6a4f'
+        }
+    ]
+
+    const testimonials = [
+        {
+            name: 'Priya Sharma',
+            location: 'Mumbai',
+            rating: 5,
+            text: 'The plants arrived in perfect condition! The team gave excellent care advice. My Monstera is thriving!'
+        },
+        {
+            name: 'Rahul Verma',
+            location: 'Delhi',
+            rating: 5,
+            text: 'Amazing quality and service. I\'ve bought 5 plants so far and each one is healthy and beautiful.'
+        },
+        {
+            name: 'Anita Desai',
+            location: 'Bangalore',
+            rating: 5,
+            text: 'MK Nursery has transformed my home into a green paradise. Highly recommend for plant lovers!'
+        }
+    ]
+
     return (
         <div className="home-page">
+            {/* Hero Section */}
             <section className="hero-section">
+                <div className="hero-background"></div>
                 <div className="hero-content container">
                     <div className="hero-text">
                         <h1>Bring Nature <br /><span className="highlight">Indoors</span></h1>
                         <p>Discover our curated collection of beautiful, healthy plants to transform your space into a green sanctuary.</p>
-                        <Link to="/catalog" className="cta-btn">
-                            Browse Catalog <ArrowRight size={20} />
-                        </Link>
+                        <div className="hero-cta-group">
+                            <Link to="/catalog" className="cta-btn primary">
+                                Browse Catalog <ArrowRight size={20} />
+                            </Link>
+                            <Link to="/blogs" className="cta-btn secondary">
+                                Plant Care Guide
+                            </Link>
+                        </div>
                     </div>
                     <div className="hero-image">
-                        {/* Using a placeholder image for the hero if no specific asset */}
                         <img src="https://images.unsplash.com/photo-1470058869958-2a77ade41c02?q=80&w=2070&auto=format&fit=crop" alt="Lush Nursery" />
                     </div>
                 </div>
             </section>
 
+            {/* New Arrivals Section */}
             <section className="featured-section container">
                 <div className="section-header">
-                    <h2>New Arrivals</h2>
-                    <Link to="/catalog" className="view-all">View All</Link>
+                    <div>
+                        <h2>New Arrivals</h2>
+                        <p className="section-subtitle">Fresh additions to our collection</p>
+                    </div>
+                    <Link to="/catalog" className="view-all">View All →</Link>
                 </div>
 
                 {loading ? (
-                    <p>Loading...</p>
+                    <p className="loading-text">Loading...</p>
                 ) : featuredPlants.length > 0 ? (
                     <div className="featured-grid">
                         {featuredPlants.map(plant => (
                             <Link to={`/catalog/${plant.id}`} key={plant.id} className="featured-card">
                                 <div className="card-image">
                                     {plant.image_url ? <img src={plant.image_url} alt={plant.name} /> : <div className="no-image">No Image</div>}
+                                    <div className="card-tags">
+                                        <span className="tag">Indoor</span>
+                                    </div>
                                 </div>
                                 <div className="card-info">
                                     <h3>{plant.name}</h3>
-                                    <p className="price">{plant.price ? `₹${plant.price}` : 'Contact for Price'}</p>
+                                    <p className="card-description">{plant.description?.substring(0, 80)}...</p>
+                                    <button className="view-details-btn">View Details</button>
                                 </div>
                             </Link>
                         ))}
@@ -74,22 +128,74 @@ export default function Home() {
                 )}
             </section>
 
+            {/* Plant Care Levels Section */}
+            <section className="care-levels-section">
+                <div className="container">
+                    <h2>Find Your Perfect Plant</h2>
+                    <p className="section-subtitle">Choose based on your experience and commitment level</p>
+                    <div className="care-levels-grid">
+                        {careLevels.map((level, index) => (
+                            <div key={index} className="care-level-card" style={{ '--card-color': level.color }}>
+                                <div className="care-emoji">{level.emoji}</div>
+                                <h3>{level.title}</h3>
+                                <p>{level.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Why MK Nursery Section */}
             <section className="about-section">
                 <div className="container">
                     <h2>Why MK Nursery?</h2>
+                    <p className="section-subtitle">We're committed to bringing you the best plants and service</p>
                     <div className="features-grid">
-                        <div className="feature">
+                        <div className="feature-card">
+                            <div className="feature-icon">
+                                <Award size={32} />
+                            </div>
                             <h3>Expert Care</h3>
                             <p>All our plants are grown with love and expert attention to ensure they thrive in your home.</p>
                         </div>
-                        <div className="feature">
+                        <div className="feature-card">
+                            <div className="feature-icon">
+                                <MapPin size={32} />
+                            </div>
                             <h3>Local Pickup</h3>
                             <p>Visit our nursery to see the plants in person and get advice from our team.</p>
                         </div>
-                        <div className="feature">
+                        <div className="feature-card">
+                            <div className="feature-icon">
+                                <Shield size={32} />
+                            </div>
                             <h3>Green Guarantee</h3>
                             <p>We guarantee healthy plants that are pest-free and ready to grow.</p>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Testimonials Section */}
+            <section className="testimonials-section">
+                <div className="container">
+                    <h2>Customer Love</h2>
+                    <p className="section-subtitle">What our plant parents are saying</p>
+                    <div className="testimonials-grid">
+                        {testimonials.map((testimonial, index) => (
+                            <div key={index} className="testimonial-card">
+                                <div className="stars">
+                                    {[...Array(testimonial.rating)].map((_, i) => (
+                                        <Star key={i} size={18} fill="currentColor" />
+                                    ))}
+                                </div>
+                                <p className="testimonial-text">"{testimonial.text}"</p>
+                                <div className="testimonial-author">
+                                    <strong>{testimonial.name}</strong>
+                                    <span>{testimonial.location}</span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
