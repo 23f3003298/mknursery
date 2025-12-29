@@ -1,4 +1,3 @@
-
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { LayoutDashboard, Flower, FileText, Settings, LogOut } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
@@ -42,6 +41,14 @@ export default function AdminLayout() {
                     >
                         <FileText size={20} />
                         <span>Blogs</span>
+                    </NavLink>
+
+                    <NavLink
+                        to="/admin/testimonials"
+                        className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                    >
+                        <FileText size={20} />
+                        <span>Testimonials</span>
                     </NavLink>
 
                     <NavLink

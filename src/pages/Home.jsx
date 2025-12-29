@@ -3,13 +3,17 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Leaf, Award, MapPin, Shield, Star } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 import './Home.css'
+import TestimonialSlider from '../components/TestimonialSlider'
 
 export default function Home() {
     const [featuredPlants, setFeaturedPlants] = useState([])
     const [loading, setLoading] = useState(true)
+    const [testimonials, setTestimonials] = useState([])
+    const [testimonialsLoading, setTestimonialsLoading] = useState(true)
 
     useEffect(() => {
         fetchFeatured()
+        fetchTestimonials()
     }, [])
 
     const fetchFeatured = async () => {
@@ -23,6 +27,18 @@ export default function Home() {
             setFeaturedPlants(data)
         }
         setLoading(false)
+    }
+
+    const fetchTestimonials = async () => {
+        setTestimonialsLoading(true)
+        const { data, error } = await supabase
+            .from('testimonials')
+            .select('*')
+            .order('created_at', { ascending: false })
+
+        if (error) console.error('Error fetching testimonials:', error)
+        else setTestimonials(data || [])
+        setTestimonialsLoading(false)
     }
 
     const careLevels = [
@@ -43,27 +59,6 @@ export default function Home() {
             title: 'Expert Care',
             description: 'For dedicated plant parents. These beauties require knowledge and commitment.',
             color: '#2d6a4f'
-        }
-    ]
-
-    const testimonials = [
-        {
-            name: 'Priya Sharma',
-            location: 'Mumbai',
-            rating: 5,
-            text: 'The plants arrived in perfect condition! The team gave excellent care advice. My Monstera is thriving!'
-        },
-        {
-            name: 'Rahul Verma',
-            location: 'Delhi',
-            rating: 5,
-            text: 'Amazing quality and service. I\'ve bought 5 plants so far and each one is healthy and beautiful.'
-        },
-        {
-            name: 'Anita Desai',
-            location: 'Bangalore',
-            rating: 5,
-            text: 'MK Nursery has transformed my home into a green paradise. Highly recommend for plant lovers!'
         }
     ]
 
@@ -182,20 +177,13 @@ export default function Home() {
                     <h2>Customer Love</h2>
                     <p className="section-subtitle">What our plant parents are saying</p>
                     <div className="testimonials-grid">
-                        {testimonials.map((testimonial, index) => (
-                            <div key={index} className="testimonial-card">
-                                <div className="stars">
-                                    {[...Array(testimonial.rating)].map((_, i) => (
-                                        <Star key={i} size={18} fill="currentColor" />
-                                    ))}
-                                </div>
-                                <p className="testimonial-text">"{testimonial.text}"</p>
-                                <div className="testimonial-author">
-                                    <strong>{testimonial.name}</strong>
-                                    <span>{testimonial.location}</span>
-                                </div>
-                            </div>
-                        ))}
+                        {testimonialsLoading ? (
+                            <p>Loading testimonials...</p>
+                        ) : testimonials.length === 0 ? (
+                            <p>No testimonials yet.</p>
+                        ) : (
+                            <TestimonialSlider testimonials={testimonials} />
+                        )}
                     </div>
                 </div>
             </section>

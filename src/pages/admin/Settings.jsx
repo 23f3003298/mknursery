@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import { Save } from 'lucide-react'
@@ -187,6 +186,8 @@ export default function Settings() {
                     {saving ? 'Saving...' : 'Save Settings'}
                 </button>
             </form>
+
+            {/* No changes required in Settings for testimonials feature */}
         </div>
     )
 }
