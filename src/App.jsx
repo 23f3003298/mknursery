@@ -15,6 +15,7 @@ import BlogPost from './pages/BlogPost'
 import PlantDetail from './pages/PlantDetail'
 import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
+import ResetPassword from './pages/ResetPassword'
 import './App.css'
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           </Route>
 
           <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/admin" element={<AdminLayout />}>
