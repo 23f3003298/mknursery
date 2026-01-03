@@ -1,7 +1,7 @@
-
 import { Outlet, NavLink } from 'react-router-dom'
 import { Leaf, Instagram, Facebook } from 'lucide-react'
 import { useSettings } from '../hooks/useSettings'
+import { HelmetProvider } from 'react-helmet-async'
 import './MainLayout.css'
 
 export default function MainLayout() {
@@ -17,6 +17,7 @@ export default function MainLayout() {
 
     return (
         <div className="main-layout">
+            <HelmetProvider>
             <header className="main-header">
                 <div className="container header-content">
                     <NavLink to="/" className="logo">
@@ -92,6 +93,7 @@ export default function MainLayout() {
                     </div>
                 </div>
             </footer>
+            </HelmetProvider>
         </div>
     )
 }

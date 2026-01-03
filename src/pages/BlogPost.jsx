@@ -1,9 +1,9 @@
-
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 import './BlogPost.css'
+import SeoHelmet from '../components/SeoHelmet'
 
 export default function BlogPost() {
     const { id } = useParams()
@@ -29,27 +29,42 @@ export default function BlogPost() {
     if (loading) return <div className="loading">Loading article...</div>
     if (!blog) return <div className="error">Article not found</div>
 
+    const seoTitle = blog.seo_title || blog.title
+    const seoDescription = blog.seo_description || blog.content?.substring(0, 150)
+    const seoImage = blog.banner_url
+    const seoRobots = 'index,follow'
+    const canonical = window.location.origin + '/blogs/' + blog.id
+
     return (
-        <div className="blog-post-page">
-            <div className="blog-hero" style={{ backgroundImage: `url(${blog.banner_url || ''})` }}>
-                <div className="overlay"></div>
-                <div className="container hero-container">
-                    <h1>{blog.title}</h1>
-                    <span className="post-date">{new Date(blog.created_at).toLocaleDateString()}</span>
+        <>
+            <SeoHelmet
+                title={seoTitle}
+                description={seoDescription}
+                canonical={canonical}
+                robots={seoRobots}
+                image={seoImage}
+            />
+            <div className="blog-post-page">
+                <div className="blog-hero" style={{ backgroundImage: `url(${blog.banner_url || ''})` }}>
+                    <div className="overlay"></div>
+                    <div className="container hero-container">
+                        <h1>{blog.title}</h1>
+                        <span className="post-date">{new Date(blog.created_at).toLocaleDateString()}</span>
+                    </div>
+                </div>
+
+                <div className="container content-container">
+                    <Link to="/blogs" className="back-link">
+                        <ArrowLeft size={16} /> Back to Blog
+                    </Link>
+
+                    <div className="post-content">
+                        {blog.content.split('\n').map((paragraph, idx) => (
+                            paragraph ? <p key={idx}>{paragraph}</p> : <br key={idx} />
+                        ))}
+                    </div>
                 </div>
             </div>
-
-            <div className="container content-container">
-                <Link to="/blogs" className="back-link">
-                    <ArrowLeft size={16} /> Back to Blog
-                </Link>
-
-                <div className="post-content">
-                    {blog.content.split('\n').map((paragraph, idx) => (
-                        paragraph ? <p key={idx}>{paragraph}</p> : <br key={idx} />
-                    ))}
-                </div>
-            </div>
-        </div>
+        </>
     )
 }

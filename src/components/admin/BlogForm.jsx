@@ -1,5 +1,4 @@
-
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import { Upload, X } from 'lucide-react'
 import './PlantForm.css' // Reusing the form styles
@@ -8,11 +7,27 @@ export default function BlogForm({ onClose, onSave, initialData = null }) {
     const [formData, setFormData] = useState({
         title: initialData?.title || '',
         content: initialData?.content || '',
-        banner_url: initialData?.banner_url || null
+        banner_url: initialData?.banner_url || null,
+        seo_title: initialData?.seo_title || '',
+        seo_description: initialData?.seo_description || '',
+        seo_image_alt: initialData?.seo_image_alt || ''
     })
     const [loading, setLoading] = useState(false)
     const [uploading, setUploading] = useState(false)
     const [error, setError] = useState(null)
+
+    useEffect(() => {
+        if (initialData) {
+            setFormData({
+                title: initialData.title || '',
+                content: initialData.content || '',
+                banner_url: initialData.banner_url || null,
+                seo_title: initialData.seo_title || '',
+                seo_description: initialData.seo_description || '',
+                seo_image_alt: initialData.seo_image_alt || ''
+            })
+        }
+    }, [initialData])
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -64,7 +79,10 @@ export default function BlogForm({ onClose, onSave, initialData = null }) {
             const blogData = {
                 title: formData.title,
                 content: formData.content,
-                banner_url: formData.banner_url
+                banner_url: formData.banner_url,
+                seo_title: formData.seo_title,
+                seo_description: formData.seo_description,
+                seo_image_alt: formData.seo_image_alt
             }
 
             let error
@@ -154,6 +172,38 @@ export default function BlogForm({ onClose, onSave, initialData = null }) {
                             )}
                         </div>
                     </div>
+
+                    <details style={{margin:'1.5em 0'}}>
+                        <summary style={{fontWeight:'bold'}}>SEO Settings (Optional)</summary>
+                        <div className="form-group">
+                            <label>SEO Title</label>
+                            <input
+                                name="seo_title"
+                                value={formData.seo_title}
+                                onChange={handleChange}
+                                placeholder="SEO Title (defaults to post title)"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Meta Description</label>
+                            <textarea
+                                name="seo_description"
+                                value={formData.seo_description}
+                                onChange={handleChange}
+                                rows={2}
+                                placeholder="Meta description for search engines"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Image Alt Text</label>
+                            <input
+                                name="seo_image_alt"
+                                value={formData.seo_image_alt}
+                                onChange={handleChange}
+                                placeholder="Alt text for banner image"
+                            />
+                        </div>
+                    </details>
 
                     <div className="modal-actions">
                         <button type="button" onClick={onClose} className="cancel-btn">Cancel</button>

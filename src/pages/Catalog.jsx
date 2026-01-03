@@ -1,8 +1,8 @@
-
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import './Catalog.css'
+import SeoHelmet from '../components/SeoHelmet'
 
 export default function Catalog() {
     const [plants, setPlants] = useState([])
@@ -36,47 +36,57 @@ export default function Catalog() {
     }
 
     return (
-        <div className="catalog-page container">
-            <div className="catalog-header">
-                <h1>Our Collection</h1>
-                <p>Browse our selection of locally grown, healthy plants</p>
-            </div>
-
-            {loading ? (
-                <div className="loading">Loading catalog...</div>
-            ) : plants.length === 0 ? (
-                <div className="empty-catalog">
-                    <p>Our catalog is currently being updated. Please check back later.</p>
+        <>
+            <SeoHelmet
+                title="Plant Catalog | MK Nursery"
+                description="Browse our selection of locally grown, healthy plants at MK Nursery."
+                canonical={window.location.origin + '/catalog'}
+                robots="index,follow"
+            />
+            <div className="catalog-page container">
+                <div className="catalog-header">
+                    <h1>Our Collection</h1>
+                    <p>Browse our selection of locally grown, healthy plants</p>
                 </div>
-            ) : (
-                <div className="catalog-grid">
-                    {plants.map(plant => (
-                        <Link to={`/catalog/${plant.id}`} key={plant.id} className="catalog-card">
-                            <div className="catalog-image">
-                                {plant.image_url ? (
-                                    <img src={plant.image_url} alt={plant.name} />
-                                ) : (
-                                    <div className="no-image-placeholder">No Image</div>
-                                )}
-                                <div className="card-tags">
-                                    <span className="tag">{getCategory(plant.name)}</span>
-                                    {plant.stock > 0 && plant.stock <= 5 && (
-                                        <span className="tag limited">Limited Stock</span>
+
+                {loading ? (
+                    <div className="loading">Loading catalog...</div>
+                ) : plants.length === 0 ? (
+                    <div className="empty-catalog">
+                        <p>Our catalog is currently being updated. Please check back later.</p>
+                    </div>
+                ) : (
+                    <div className="catalog-grid">
+                        {plants.map(plant => (
+                            <Link to={`/catalog/${plant.id}`} key={plant.id} className="catalog-card">
+                                <div className="catalog-image">
+                                    {plant.image_url ? (
+                                        <img src={plant.image_url} alt={plant.name} />
+                                    ) : (
+                                        <div className="no-image-placeholder">No Image</div>
+                                    )}
+                                    <div className="card-tags">
+                                        <span className="tag">{getCategory(plant.name)}</span>
+                                        {plant.stock > 0 && plant.stock <= 5 && (
+                                            <span className="tag limited">Limited Stock</span>
+                                        )}
+                                    </div>
+                                    {plant.stock <= 0 && (
+                                        <div className="stock-badge out">Out of Stock</div>
                                     )}
                                 </div>
-                                {plant.stock <= 0 && (
-                                    <div className="stock-badge out">Out of Stock</div>
-                                )}
-                            </div>
-                            <div className="catalog-info">
-                                <h3>{plant.name}</h3>
-                                <p className="description">{plant.description}</p>
-                                <button className="view-details-btn">View Details</button>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            )}
-        </div>
+                                <div className="catalog-info">
+                                    <h3>{plant.name}</h3>
+                                    <p className="description">{plant.description}</p>
+                                    {/* If you ever show price here, use: */}
+                                    {/* <div className="catalog-price">{plant.price ? `₹${Number(plant.price).toLocaleString('en-IN')}` : ''}</div> */}
+                                    <button className="view-details-btn">View Details</button>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </>
     )
 }

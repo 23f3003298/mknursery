@@ -1,5 +1,4 @@
-
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import { Upload, X } from 'lucide-react'
 import './PlantForm.css'
@@ -10,11 +9,29 @@ export default function PlantForm({ onClose, onSave, initialData = null }) {
         description: initialData?.description || '',
         price: initialData?.price || '',
         stock: initialData?.stock || 0,
-        image_url: initialData?.image_url || null
+        image_url: initialData?.image_url || null,
+        seo_title: initialData?.seo_title || '',
+        seo_description: initialData?.seo_description || '',
+        seo_image_alt: initialData?.seo_image_alt || ''
     })
     const [loading, setLoading] = useState(false)
     const [uploading, setUploading] = useState(false)
     const [error, setError] = useState(null)
+
+    useEffect(() => {
+        if (initialData) {
+            setFormData({
+                name: initialData.name || '',
+                description: initialData.description || '',
+                price: initialData.price || '',
+                stock: initialData.stock || 0,
+                image_url: initialData.image_url || null,
+                seo_title: initialData.seo_title || '',
+                seo_description: initialData.seo_description || '',
+                seo_image_alt: initialData.seo_image_alt || ''
+            })
+        }
+    }, [initialData])
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -53,14 +70,16 @@ export default function PlantForm({ onClose, onSave, initialData = null }) {
         e.preventDefault()
         setLoading(true)
         setError(null)
-
         try {
             const plantData = {
                 name: formData.name,
                 description: formData.description,
                 price: formData.price ? parseFloat(formData.price) : null,
                 stock: parseInt(formData.stock),
-                image_url: formData.image_url
+                image_url: formData.image_url,
+                seo_title: formData.seo_title,
+                seo_description: formData.seo_description,
+                seo_image_alt: formData.seo_image_alt
             }
 
             let error
@@ -124,13 +143,14 @@ export default function PlantForm({ onClose, onSave, initialData = null }) {
 
                     <div className="form-row">
                         <div className="form-group">
-                            <label>Price ($)</label>
+                            <label>Price (₹)</label>
                             <input
                                 type="number"
                                 name="price"
                                 value={formData.price}
                                 onChange={handleChange}
                                 step="0.01"
+                                placeholder="e.g. 1000"
                             />
                         </div>
 
@@ -173,6 +193,38 @@ export default function PlantForm({ onClose, onSave, initialData = null }) {
                             )}
                         </div>
                     </div>
+
+                    <details style={{margin:'1.5em 0'}}>
+                        <summary style={{fontWeight:'bold'}}>SEO Settings (Optional)</summary>
+                        <div className="form-group">
+                            <label>SEO Title</label>
+                            <input
+                                name="seo_title"
+                                value={formData.seo_title}
+                                onChange={handleChange}
+                                placeholder="SEO Title (defaults to plant name)"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Meta Description</label>
+                            <textarea
+                                name="seo_description"
+                                value={formData.seo_description}
+                                onChange={handleChange}
+                                rows={2}
+                                placeholder="Meta description for search engines"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Image Alt Text</label>
+                            <input
+                                name="seo_image_alt"
+                                value={formData.seo_image_alt}
+                                onChange={handleChange}
+                                placeholder="Alt text for plant image"
+                            />
+                        </div>
+                    </details>
 
                     <div className="modal-actions">
                         <button type="button" onClick={onClose} className="cancel-btn">Cancel</button>

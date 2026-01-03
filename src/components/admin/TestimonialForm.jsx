@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
-import { Upload, X } from 'lucide-react'
+import { Upload, X, Star } from 'lucide-react'
 import '../admin/PlantForm.css'
 
 export default function TestimonialForm({ onClose, onSave, initialData = null }) {
@@ -54,6 +54,11 @@ export default function TestimonialForm({ onClose, onSave, initialData = null })
       setUploading(false)
     }
   }
+
+  // Star rating UI
+  const handleStarHover = (val) => setFormData(prev => ({ ...prev, hoverRating: val }))
+  const handleStarLeave = () => setFormData(prev => ({ ...prev, hoverRating: undefined }))
+  const handleStarClick = (val) => setFormData(prev => ({ ...prev, rating: val }))
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -116,9 +121,19 @@ export default function TestimonialForm({ onClose, onSave, initialData = null })
 
           <div className="form-group">
             <label>Rating</label>
-            <select name="rating" value={formData.rating} onChange={handleChange}>
-              {[5,4,3,2,1].map(r => <option key={r} value={r}>{r} stars</option>)}
-            </select>
+            <div className="star-rating" style={{ display: 'flex', gap: 6, fontSize: 24, cursor: 'pointer', margin: '8px 0' }}>
+              {[1,2,3,4,5].map(star => (
+                <span
+                  key={star}
+                  onMouseEnter={() => handleStarHover(star)}
+                  onMouseLeave={handleStarLeave}
+                  onClick={() => handleStarClick(star)}
+                  style={{ color: (formData.hoverRating ? star <= formData.hoverRating : star <= formData.rating) ? '#2d6a4f' : '#d1e7dd', transition: 'color 0.2s' }}
+                >
+                  <Star fill={(formData.hoverRating ? star <= formData.hoverRating : star <= formData.rating) ? '#2d6a4f' : 'none'} size={28} />
+                </span>
+              ))}
+            </div>
           </div>
 
           <div className="form-group">

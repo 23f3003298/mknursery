@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
-import { Plus, Edit, Trash2, RefreshCcw } from 'lucide-react'
+import { Plus, Edit, Trash2 } from 'lucide-react'
 import PlantForm from '../../components/admin/PlantForm'
 import './Plants.css'
 
@@ -38,42 +38,6 @@ export default function Plants() {
         else fetchPlants()
     }
 
-    const handleFixImages = async () => {
-        if (!window.confirm('This will update the images of the seeded plants. Continue?')) return
-        setLoading(true)
-
-        const updates = {
-            'Monstera Deliciosa': 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=600&q=80',
-            'Fiddle Leaf Fig': 'https://images.unsplash.com/photo-1613143323450-951167440409?auto=format&fit=crop&w=600&q=80',
-            'Snake Plant': 'https://images.unsplash.com/photo-1598516088265-43a91e1d09ec?auto=format&fit=crop&w=600&q=80',
-            'Golden Pothos': 'https://images.unsplash.com/photo-1612361660144-486663ed52cb?auto=format&fit=crop&w=600&q=80',
-            'Peace Lily': 'https://images.unsplash.com/photo-1593691509543-c55cead2e0a4?auto=format&fit=crop&w=600&q=80',
-            'Rubber Plant': 'https://images.unsplash.com/photo-1611211756282-37604f6da641?auto=format&fit=crop&w=600&q=80',
-            'Aloe Vera': 'https://images.unsplash.com/photo-1600150961623-6e104be12dbe?auto=format&fit=crop&w=600&q=80'
-        }
-
-        let hasError = false
-        for (const [name, url] of Object.entries(updates)) {
-            const { error } = await supabase
-                .from('plants')
-                .update({ image_url: url })
-                .eq('name', name)
-
-            if (error) {
-                console.error(`Error updating ${name}:`, error)
-                hasError = true
-            }
-        }
-
-        if (hasError) {
-            alert('Some images failed to update. Check console.')
-        } else {
-            alert('Images updated successfully!')
-            fetchPlants()
-        }
-        setLoading(false)
-    }
-
     const handleEdit = (plant) => {
         setEditingPlant(plant)
         setIsFormOpen(true)
@@ -94,10 +58,6 @@ export default function Plants() {
             <div className="page-header">
                 <h1>Plants Inventory</h1>
                 <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button onClick={handleFixImages} className="add-btn" style={{ backgroundColor: '#6c757d' }}>
-                        <RefreshCcw size={20} />
-                        Fix Images
-                    </button>
                     <button onClick={handleAddNew} className="add-btn">
                         <Plus size={20} />
                         Add Plant
